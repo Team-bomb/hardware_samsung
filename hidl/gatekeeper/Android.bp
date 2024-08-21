@@ -8,7 +8,7 @@ package {
 }
 
 cc_library_shared {
-    name: "android.hardware.gatekeeper@1.0-impl",
+    name: "android.hardware.gatekeeper@1.0-impl-samsung",
     defaults: ["hidl_defaults"],
     relative_install_path: "hw",
     vendor: true,
@@ -26,11 +26,30 @@ cc_library_shared {
 }
 
 cc_binary {
-    name: "android.hardware.gatekeeper@1.0-service",
+    name: "android.hardware.gatekeeper@1.0-service.samsung",
     defaults: ["hidl_defaults"],
     relative_install_path: "hw",
     vendor: true,
-    init_rc: ["android.hardware.gatekeeper@1.0-service.rc"],
+    init_rc: ["android.hardware.gatekeeper@1.0-service.samsung.rc"],
+
+    srcs: ["service.cpp"],
+
+    shared_libs: [
+        "android.hardware.gatekeeper@1.0",
+        "libhardware",
+        "libhidlbase",
+        "libutils",
+        "liblog",
+    ],
+
+}
+
+cc_binary {
+    name: "android.hardware.gatekeeper@1.0-service.samsung.mdfpp",
+    defaults: ["hidl_defaults"],
+    relative_install_path: "hw",
+    vendor: true,
+    init_rc: ["android.hardware.gatekeeper@1.0-service.samsung.mdfpp.rc"],
 
     srcs: ["service.cpp"],
 

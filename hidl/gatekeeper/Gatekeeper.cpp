@@ -21,6 +21,12 @@
 
 #include "Gatekeeper.h"
 
+/* For syncSecnvm */
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
+#include <string.h>
+
 namespace android {
 namespace hardware {
 namespace gatekeeper {
@@ -49,6 +55,26 @@ Gatekeeper::~Gatekeeper()
         }
     }
     dlclose(module->dso);
+}
+
+
+Gatekeeper::syncSecnvm()
+{
+    int fd = open("/mnt/vendor/persist/secnvm", O_RDONLY);
+
+    if (fd < 0) {
+        int ret = fsync(fd);
+        if (!ret) {
+            ALOGE("fsync failed : fd:%d", fd);
+        }
+        close(fd);
+        ALOGD("syncSecnvm success");
+        return Void();
+    }
+
+    char err = strerror(errno);
+    ALOGE("could not open : %s: %s", "/mnt/vendor/persist/secnvm", err);
+    return Void();
 }
 
 // Methods from ::android::hardware::gatekeeper::V1_0::IGatekeeper follow.
